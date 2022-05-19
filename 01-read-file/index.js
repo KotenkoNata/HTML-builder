@@ -1,10 +1,12 @@
-const {ReadStream} = require('fs');
+const fs = require('fs');
+const path = require('path');
 
-const stream = new ReadStream(`${__dirname}/text.txt`, {
+const stream = fs.createReadStream(path.join(__dirname, 'text.txt'), {
   encoding: 'utf8'
 });
 
-stream.on('readable', function () {
-  const data = stream.read();
-  console.log(data);
-});
+let data = '';
+
+stream.on('data', chunk => data += chunk);
+stream.on('end', () => console.log(data));
+stream.on('error', error => console.log('Error', error.message));
