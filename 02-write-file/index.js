@@ -1,27 +1,34 @@
 const fs = require('fs');
-const { stdout, stdin, exit} = process;
+const path = require('path');
+const readline = require('readline');
 
-
-fs.writeFile(`${__dirname}/newfile.txt`, '', function (err) {
-  if (err) throw err;
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
 });
 
-stdout.write('Please type some text\n');
+const stream = fs.createWriteStream(path.join(__dirname, 'newfile.txt'), {
+  encoding: 'utf8'
+});
 
-stdin.on('data', data => {
-  const text = data.toString();
+rl.write('Please type some text\n');
 
-  if(text === 'exit\n'){
-    console.log('See you next time');
-    exit();
+rl.on('line', (data) => {
+  if(data === 'exit'){
+    rl.close();
   }
-  fs.appendFile(`${__dirname}/newfile.txt`, text, (err)=>{
+  stream.write(`${data}\n`, (err)=>{
     if (err) throw err;
   });
-  stdout.write('Please type some text\n');
 });
 
-process.on('SIGINT', function() {
+rl.on('close',()=>{
   console.log('See you next time');
-  exit();
+  process.exit();
 });
+
+rl.on('SIGINT',()=>{
+  console.log('See you next time');
+  process.exit();
+});
+
