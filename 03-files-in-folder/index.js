@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {stat} = require('fs');
 
-const folderPath = `${__dirname}/secret-folder`;
+const folderPath = path.join(__dirname, 'secret-folder');
 
 fs.readdir(folderPath, { withFileTypes: true },(err, files) => {
   if (err)
@@ -10,12 +10,12 @@ fs.readdir(folderPath, { withFileTypes: true },(err, files) => {
   else {
     files.forEach(file => {
       if(file.isFile()){
-
-        stat(`${__dirname}/secret-folder/${file.name}`, (error, stats)=>{
+        const pathToFile = path.join(__dirname,'secret-folder',`${file.name}`);
+        stat(`${pathToFile}`, (error, stats)=>{
           if(error){
             console.log(error);
           } else{
-            console.log(`${path.basename(file.name, path.extname(file.name))} - ${path.extname(file.name)} - ${stats.size}`);
+            console.log(`${path.basename(file.name, path.extname(file.name))} - ${path.extname(file.name)} - ${stats.size}b`);
           }
         });
       }
