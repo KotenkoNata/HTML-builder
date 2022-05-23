@@ -7,7 +7,7 @@ const ToFolderPath = path.join(__dirname, 'files-copy');
 
 fs.exists(ToFolderPath, (exists) => {
   if(!exists){
-    fsPromises.mkdir(`${__dirname}/files-copy`, {recursive: true}).then(function() {
+    fsPromises.mkdir(ToFolderPath, {recursive: true}).then(function() {
       console.log('Directory created successfully');
     }).catch(function() {
       console.log('Failed to create directory');
